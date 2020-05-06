@@ -12,8 +12,7 @@ export GOPATH ?= $(PWD)/tmp-go
 
 .PHONY: all clean doc
 
-all: ggs/ggs rss2json/rss2json maildir-put/maildir-put ua-inline/ua-inline ua-proxify/ua-proxify \
-	scrapers/ua-scraper-torrent9
+all: ggs/ggs rss2json/rss2json maildir-put/maildir-put ua-inline/ua-inline ua-proxify/ua-proxify
 
 doc:
 	test -d doc || mkdir doc
@@ -47,12 +46,15 @@ $(GOPATH):
 	mkdir $(GOPATH)/src
 	mkdir $(GOPATH)/pkg
 
+
+myinstall: all
+	for f in $(GODIRS) ; do install $$f/$$f ~/bin ; done
+
 install: all
 	install -d $(BINDIR)
 	for f in $(GODIRS) ; do install $$f/$$f $(BINDIR)/ ; done
 	for s in $(SCRAPERS) ; do install scrapers/ua-scraper-$$s $(BINDIR)/ ; done
 	install weboobmsg2json/weboobmsg2json $(BINDIR)/
-	
 	install -d $(DOCDIR)
 	install -d $(MANDIR)/man1/
 	install ggsrc.example $(DOCDIR)
